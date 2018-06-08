@@ -2,45 +2,91 @@
 <html>
 
 <head>
-    <title>p5js Template</title>
+    <title>Pong</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
     <script>
-      var diameter;
-      var size;
-      
-      function setup() {
-        createCanvas(500,500);
-        diameter = 0;
-        size = 55
-        
-      }
+        var ballX;
+        var ballY;
+        var ballSpeedX = 10;
+        var ballSpeedY = 10;
+        var paddleHeight = 5;
+        var red, blue, green;
+        var rectWidth
+        var score=0
 
-      function draw() {
-        background(255);
-        ellipse(mouseY,mouseX,diameter,diameter);
-        // Draw a rectangle with rounded corners, each having a radias of 20
-        rect(mouseY, mouseY, size, size, 20)
-        
-        
-      }
+        function setup() {
+            createCanvas(800, 600);
+            noCursor();
+            ballX = random(width);
+            ballY = random(height / 2);
+            red = random(255)
+            blue = random(255)
+            green = random(255)
+            rectWidth=100
+        }
 
-      function mouseMoved(){
-        diameter++;
-        size-= .1;
-      }      
-      function mouseDragged(){
-        diameter--;
-        fill(255,204, 0);
-    rect(20, 20, 60, 60);
-    }
+        function draw() {
+            background(100);
+            moveBall();
+            checkCollide();
+            drawPaddle();
+            drawBall();
+            
+            text("Score"+score, 10, 50);
+        }
+
+        function moveBall() {
+            ballX = ballX + ballSpeedX;
+            ballY = ballY + ballSpeedY;
+
+            console.log("ballSpeedX: " + ballSpeedX +
+                ", ballSpeedY: " + ballSpeedY);
+        }
+
+        function checkCollide() {
+            if (ballX < 10 || ballX > width) {
+                ballSpeedX = ballSpeedX * -1;
+            }
+            if (ballY < 0) {
+                ballSpeedY = ballSpeedY * -1;
+            }
+            if (ballY > height - paddleHeight) {
+                if (ballX > mouseX && ballX < mouseX + 200) {
+                    ballSpeedY = ballSpeedY * -1;
+                    red = random(255)
+                    blue = random(255)
+                    green = random(255)
+                    rectWidth -=5
+                    score+=1
+                    // The color changes, the width of the of the paddle decreases. The score also increases, it also changes color as the ball hits the paddle.
+                }
+                else {
+                    text("YOU LOST", width / 2, height / 2);
+                    noLoop();
+                }
+            }
+        }
+
+        function drawBall() {
+            noStroke();
+            fill(red, green, blue)
+            ellipse(ballX, ballY, 15, 15);
 
 
+        }
+
+        function drawPaddle() {
+            strokeWeight(10);
+            rect(mouseX, height - paddleHeight - 10, rectWidth, paddleHeight);//;
+            
+        }
     </script>
 </head>
 
 <body>
+<form><input TYPE="button" onClick="history.go(0)" value="Reset"></form>
     <div id="code" class="container-fluid">
-        <script src="https://gist-it.appspot.com/github/zachariahc41/p5js/blob/master/conditionals.html?footer=0"></script>
+        <script src="https://gist-it.appspot.com/github/zachariahc41/p5js/blob/master/Pong.html?footer=0"></script>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -50,3 +96,6 @@
         });
     </script>
 </body>
+
+
+</html>
